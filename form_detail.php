@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +47,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
 
-        <a class="navbar-brand fw-bold" href="form.html">
+        <a class="navbar-brand fw-bold" href="form_detail.php">
             Library Management System
         </a>
 
@@ -54,13 +57,13 @@
                     <a class="nav-link active" href="index.html">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="form.html">Form</a>
+                    <a class="nav-link" href="form_detail.php">Form</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="about.html">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
+                    <a class="nav-link" href="contact.php">Contact</a>
                 </li>
             </ul>
         </div>
@@ -80,9 +83,22 @@
         <div class="card form-card shadow-sm mx-auto">
             <div class="card-body p-4 p-md-5">
 
-                <form onsubmit="return validateForm()"
-                      onreset="clearMessage()">
+                <form method="POST" action="form.php">
+                    <?php
+                    if (isset($_SESSION['msg'])) {
+                      $msg = $_SESSION['msg'];
 
+                      if ($msg == "Entry added successfully!") {
+                        echo '<div class="alert alert-success">';
+                      } else {
+                        echo '<div class="alert alert-warning">';
+                      }
+                      echo htmlspecialchars($msg);
+                      echo '</div>';
+                      unset($_SESSION['msg']);
+                    }
+                    ?>
+                    
                     <!-- Name -->
                     <div class="mb-3">
                         <label for="name" class="form-label">
@@ -91,6 +107,7 @@
 
                         <input type="text"
                                id="name"
+                               name="name"
                                class="form-control"
                                placeholder="Enter your name">
                     </div>
@@ -103,6 +120,7 @@
 
                         <input type="text"
                                id="email"
+                               name="email"
                                class="form-control"
                                placeholder="Enter your email">
                     </div>
@@ -115,6 +133,7 @@
 
                         <input type="text"
                                id="phone"
+                               name="phone"
                                class="form-control"
                                placeholder="Enter 10-digit phone number"
                                maxlength="10">
@@ -135,13 +154,6 @@
 
                     </div>
 
-                    <!-- Success Message -->
-                    <div id="successMessage"
-                         class="alert alert-success mt-4 d-none"
-                         role="status">
-                        Validation successful!
-                    </div>
-
                 </form>
             </div>
         </div>
@@ -160,41 +172,28 @@
             let email = document.getElementById("email").value.trim();
             let phone = document.getElementById("phone").value.trim();
 
-            let successMessage =
-                document.getElementById("successMessage");
-
-            successMessage.classList.add("d-none");
-
             // Check empty fields
             if (name === "" || email === "" || phone === "") {
-                alert("All fields required!");
+                alert("All fields required");
                 return false;
             }
 
             // Check email
             if (!email.includes("@") || !email.includes(".")) {
-                alert("Invalid email!");
+                alert("Invalid email");
                 return false;
             }
 
             // Check phone: exactly 10 numeric digits
             if (phone.length !==10 || isNaN(phone)) {
-                alert("Phone must be 10 digits!");
+                alert("Phone must be 10 digits.");
                 return false;
-            }
-
-            // Show success message
-            successMessage.classList.remove("d-none");
-
+            }      
             // Prevent page reload
-            return false;
+            return true;
         }
 
-        // Clear success message when form is reset
-        function clearMessage() {
-            document.getElementById("successMessage")
-                    .classList.add("d-none");
-        }
+        
     </script>
 
     <!-- Bootstrap JavaScript -->

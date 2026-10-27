@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +41,7 @@
    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
 
-        <a class="navbar-brand fw-bold" href="contact.html">
+        <a class="navbar-brand fw-bold" href="contact.php">
             Library Management System
         </a>
 
@@ -48,13 +51,13 @@
                     <a class="nav-link active" href="index.html">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="form.html">Form</a>
+                    <a class="nav-link" href="form_detail.php">Form</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="about.html">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
+                    <a class="nav-link" href="contact.php">Contact</a>
                 </li>
             </ul>
         </div>
@@ -80,8 +83,22 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4 p-md-5">
 
-                        <form id="contactForm">
+                        <form id="contactForm" method="POST" action="contactsave.php">
+                            <?php
+                            if (isset($_SESSION['msgs'])) {
+                                $msg = $_SESSION['msgs'];
 
+                                if ($msg == "Message submitted successfully!") {
+                                  echo '<div class="alert alert-success">';
+                                } else {
+                                  echo '<div class="alert alert-warning">';
+                                }
+
+                                echo htmlspecialchars($msg);
+                                echo '</div>';
+                                unset($_SESSION['msgs']);
+                            }
+                            ?>
                             <div class="mb-3">
                                 <label for="name" class="form-label">
                                     Full Name
@@ -90,8 +107,8 @@
                                 <input type="text"
                                        class="form-control"
                                        id="name"
-                                       placeholder="Enter your name"
-                                       required>
+                                       name="name"
+                                       placeholder="Enter your name">
                             </div>
 
                             <div class="mb-3">
@@ -99,11 +116,11 @@
                                     Email Address
                                 </label>
 
-                                <input type="email"
+                                <input type="text"
                                        class="form-control"
                                        id="email"
-                                       placeholder="Enter your email"
-                                       required>
+                                       name="email"
+                                       placeholder="Enter your email">
                             </div>
 
                             <div class="mb-4">
@@ -113,23 +130,15 @@
 
                                 <textarea class="form-control"
                                           id="messageText"
+                                          name="msg"
                                           rows="4"
-                                          placeholder="Write your message"
-                                          required></textarea>
+                                          placeholder="Write your message"></textarea>
                             </div>
 
                             <button type="submit"
                                     class="btn btn-primary w-100">
                                 Send Message
                             </button>
-
-                            <div id="successMessage"
-                                class="alert alert-success mt-3 d-none"
-                                role="status"
-                                aria-live="polite">
-                                Message submitted successfully!
-                            </div>
-
                         </form>
 
                     </div>
@@ -148,26 +157,6 @@
     <!-- Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Form JavaScript -->
-    <script>
-        
-    const contactForm = document.getElementById("contactForm");
-    const successMessage = document.getElementById("successMessage");
-
-    contactForm.addEventListener("submit", function(event) {
-        event.preventDefault();
-
-        successMessage.classList.remove("d-none");
-        this.reset();
-    });
-
-    // Hide the success message when the user starts filling the form again
-    contactForm.addEventListener("input", function() {
-        successMessage.classList.add("d-none");
-    });
-
-
-    </script>
 
 </body>
 </html>
